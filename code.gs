@@ -11,11 +11,27 @@ function getStudents(courseId) {
     pageSize: 100
   };
   let students = [];
-  let response = Classroom.Courses.Students.list(courseId, optionalArgs);
-  let studentsList = response.students;
-  if (studentsList && studentsList.length > 0) {
-    students = studentsList;
-  }
+  let pageToken = null;
+
+  do {
+    if (pageToken) {
+      optionalArgs.pageToken = pageToken;
+    } else {
+      delete optionalArgs.pageToken;
+    }
+
+    const response = Classroom.Courses.Students.list(courseId, optionalArgs);
+    const studentsList = response && response.students ? response.students : [];
+
+    // Append students from this page
+    for (let i = 0; i < studentsList.length; i++) {
+      students.push(studentsList[i]);
+    }
+
+    // Prepare for next iteration
+    pageToken = response && response.nextPageToken ? response.nextPageToken : null;
+  } while (pageToken);
+
   return students;
 }
 
