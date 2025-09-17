@@ -1,0 +1,22 @@
+Release notes
+
+Changes since v0.01-alpha -> main
+
+Highlights
+- Turned a short script into a documented and more robust utility for extracting student given names from Google Classroom into Sheets.
+- Added comprehensive file-level documentation / usage instructions in `code.gs`.
+- Fixed the menu label typo: "Classroom Name Extrator" -> "Classroom Name Extractor".
+- Implemented pagination in `getStudents()` to retrieve all students across multiple pages from the Classroom API.
+- Filter only ACTIVE courses before attempting to fetch rosters (avoids writing empty/irrelevant columns).
+- Improved handling when there are no active courses (writes a clear message instead of leaving the sheet blank).
+
+Files changed
+- code.gs: Documentation, bug fixes, pagination handling, active-course filtering, and output safety checks.
+
+Notes
+- No API or OAuth scope changes were added beyond those documented in-file. Ensure the Classroom Advanced Service is enabled and the Classroom API is enabled in the Cloud Console before use.
+- This release is a functional improvement (bugfix + usability) and does not change the public API surface outside the Apps Script project file.
+
+Suggested tag: v0.02
+
+Changelog (full diff saved in `changes.diff`).
