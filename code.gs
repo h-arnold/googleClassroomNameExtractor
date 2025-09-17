@@ -1,6 +1,6 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Classroom Name Extrator')
+  ui.createMenu('Classroom Name Extractor')
     .addItem('Get all the names!', 'getAllNames')
     .addToUi();
 }
@@ -32,9 +32,12 @@ function getAllNames() {
   if (courses.courses && courses.courses.length > 0) {
     const data = [];
     
-    // Fetch students for each course and prepare the data array
-    for (let i = 0; i < courses.courses.length; i++) {
-      const course = courses.courses[i];
+    // Filter only active courses
+    const activeCourses = courses.courses.filter(c => c.courseState === "ACTIVE");
+    
+    // Fetch students for each active course and prepare the data array
+    for (let i = 0; i < activeCourses.length; i++) {
+      const course = activeCourses[i];
       const courseId = course.id;
       const courseName = course.name;
       
@@ -53,11 +56,15 @@ function getAllNames() {
       data.push(columnData);
     }
     
-    // Transpose data to fit into columns
-    const transposedData = transposeArray(data);
-    
-    // Set the values in the sheet starting from the first row and column
-    sheet.getRange(1, 1, transposedData.length, transposedData[0].length).setValues(transposedData);
+    if (data.length > 0) {
+      // Transpose data to fit into columns
+      const transposedData = transposeArray(data);
+      
+      // Set the values in the sheet starting from the first row and column
+      sheet.getRange(1, 1, transposedData.length, transposedData[0].length).setValues(transposedData);
+    } else {
+      sheet.getRange(1, 1).setValue("No active courses found");
+    }
   } else {
     // If no courses are found, add a message row
     sheet.getRange(1, 1).setValue("No courses found");
